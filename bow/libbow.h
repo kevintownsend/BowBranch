@@ -1343,6 +1343,7 @@ if (((*(BARREL)->method->wv_normalize_weights)))	\
 #include <bow/kl.h>
 #include <bow/em.h>
 #include <bow/knn.h>
+#include <argp/argp.h>
 struct argp_child;		/* forward declare this type */
 
 /* Associate method M with the string NAME, so the method structure
