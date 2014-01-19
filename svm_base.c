@@ -64,7 +64,7 @@ static int model_starting_no=0;
  * make sure when passing arguments, you know what the actuals are */
 static int transduce_class=(1 << bow_doc_unlabeled);
 static int transduce_class_overriding=0; /* gets set to 1 when args are 
-					  * passed to override */
+                      * passed to override */
 static char *svml_basename=NULL;
 FILE *svml_test_file=NULL;
 
@@ -109,8 +109,8 @@ static int df_counts=bow_tfidf_occurrences;
 struct model_bucket {
   bow_wv    **docs;
   float     **oweights;  /* original weights (after norm & tf scaling) 
-			    note - this only matters when tf_transform is set &
-			    some weight_per_model scheme is used */
+                note - this only matters when tf_transform is set &
+                some weight_per_model scheme is used */
   /* note - these are regular vectors instead of wv's to save time 
    * (O(# qwv features) instead of O((# qwv features) + (# of features)) */
   union {
@@ -129,7 +129,7 @@ struct model_bucket {
 };
 
 static struct model_bucket model_cache = {NULL, NULL, {NULL}, NULL, NULL, NULL, 
-					  NULL, NULL, NULL, 0, 0};
+                      NULL, NULL, NULL, 0, 0};
 
 double dprod(bow_wv *wv1, bow_wv *wv2);
 double kernel_poly(bow_wv *wv1, bow_wv *wv2);
@@ -262,6 +262,7 @@ error_t svm_parse_opt (int key, char *arg, struct argp_state *state) {
       kernel = svm_kernel_fisher;
       break;
     default:
+        break;
     }
     break;
   case AL_TEST_IN_TRAIN_ARG:
@@ -342,16 +343,16 @@ error_t svm_parse_opt (int key, char *arg, struct argp_state *state) {
       int a;
       a = atoi(arg);
       if (a == bow_doc_train) {
-	fprintf(stderr,"Cannot do transduction on training set, ignoring \"%s\" option\n",arg);
+    fprintf(stderr,"Cannot do transduction on training set, ignoring \"%s\" option\n",arg);
       } else {
-	if (!transduce_class) {
-	  transduce_class_overriding = 1;
-	  transduce_class = 0;
-	}
-	/* < 0 turns transduction off */
-	if (a > 0) {
-	  transduce_class |= (1 << a);
-	}
+    if (!transduce_class) {
+      transduce_class_overriding = 1;
+      transduce_class = 0;
+    }
+    /* < 0 turns transduction off */
+    if (a > 0) {
+      transduce_class |= (1 << a);
+    }
       }
     }
     break;
@@ -359,7 +360,7 @@ error_t svm_parse_opt (int key, char *arg, struct argp_state *state) {
     svm_trans_hyp_refresh = atoi(arg);
     if (svm_trans_hyp_refresh < 1) {
       fprintf(stderr, "svm_trans_hyp_refresh (hyperplane refresh rate)"
-	      " must be greater than 0\n");
+          " must be greater than 0\n");
     }
     break;
   case TRANS_IGNORE_BIAS_ARG:
@@ -387,7 +388,7 @@ error_t svm_parse_opt (int key, char *arg, struct argp_state *state) {
 #ifndef HAVE_LOQO
     if (svm_use_smo != 1) {
       fprintf(stderr,"Cannot switch from SMO, no other solvers were built,\n"
-	      "rebuild libbow with pr_loqo to use another algorithm.\n");
+          "rebuild libbow with pr_loqo to use another algorithm.\n");
     }
 #endif
     break;
@@ -414,10 +415,10 @@ error_t svm_parse_opt (int key, char *arg, struct argp_state *state) {
 static const struct argp svm_argp = { svm_options, svm_parse_opt };
 
 static struct argp_child svm_argp_child = {
-  &svm_argp,		/* This child's argp structure */
-  0,		       	/* flags for child */
-  0,		       	/* optional header in help message */
-  0		       	/* arbitrary group number for ordering */
+  &svm_argp,        /* This child's argp structure */
+  0,                   /* flags for child */
+  0,                   /* optional header in help message */
+  0                   /* arbitrary group number for ordering */
 };
 
 
@@ -550,7 +551,7 @@ double ddprod(bow_wv *wv1, bow_wv *wv2) {
 /* End of command-line options specific to SVMs */
 double kernel_poly(bow_wv *wv1, bow_wv *wv2) {
   return (pow(kparm.poly.lin_co * dprod(wv1,wv2) + 
-	      kparm.poly.const_co, kparm.poly.degree));
+          kparm.poly.const_co, kparm.poly.degree));
 }
 
 double kernel_rbf(bow_wv *wv1, bow_wv *wv2) {
@@ -580,7 +581,7 @@ void kcache_init(int nwide) {
   if ((harray = (kc_el *) malloc(sizeof(kc_el)*cache_size)) == NULL) {
     cache_size = cache_size/2;
     fprintf(stderr, "Could not allocate space for the kernel cache.\n"
-	    "Shrinking size to %d and trying again.\n", cache_size);
+        "Shrinking size to %d and trying again.\n", cache_size);
     return (kcache_init(nwide));
   }
 
@@ -628,14 +629,14 @@ double svm_kernel_cache(bow_wv *wv1, bow_wv *wv2) {
       return (harray[h_index].val);
     } else {
       if (harray[h_index].age > 0) {
-	if (min_age > harray[h_index].age) {
-	  min_age = harray[h_index].age;
-	  min_from = h_index;
-	}
-	continue;
+    if (min_age > harray[h_index].age) {
+      min_age = harray[h_index].age;
+      min_from = h_index;
+    }
+    continue;
       } else {
-	min_from = h_index;
-	break;
+    min_from = h_index;
+    break;
       }
     }
   }
@@ -753,8 +754,8 @@ void get_top_n(struct di *arr, int len, int n) {
     
     for (j=i+1; j<len; j++) {
       if (arr[j].d < mind) {
-	mind = arr[j].d;
-	minfrom = j;
+    mind = arr[j].d;
+    minfrom = j;
       }
     }
 
@@ -775,7 +776,7 @@ void get_top_n(struct di *arr, int len, int n) {
 /* sets doc weights by using counts & normalizer */
 static float *tfidf(bow_wv **docs, int ntrain) {
   float    idf_sum;            /* sum of all the idf values */
-  int      max_wi;	       /* the highest "word index" */
+  int      max_wi;           /* the highest "word index" */
   float   *new_idf_vect;
 
   int i, j;
@@ -795,17 +796,17 @@ static float *tfidf(bow_wv **docs, int ntrain) {
   for (i=0; i<ntrain; i++)  {
     for (j=0; j<docs[i]->num_entries; j++) {
       if (df_counts == bow_tfidf_occurrences) {
-	/* Make DV be the number of documents in which word WI occurs 
-	   at least once.  (We can't just set it to DV->LENGTH because
-	   we have to check to make sure each document is part of the
-	   model. */
-	new_idf_vect[docs[i]->entry[j].wi] ++;
+    /* Make DV be the number of documents in which word WI occurs 
+       at least once.  (We can't just set it to DV->LENGTH because
+       we have to check to make sure each document is part of the
+       model. */
+    new_idf_vect[docs[i]->entry[j].wi] ++;
       } else if (df_counts == bow_tfidf_words) {
-	/* Make DV be the total number of times word WI appears
-	   in any document. */
-	new_idf_vect[docs[i]->entry[j].wi] += docs[i]->entry[j].count;
+    /* Make DV be the total number of times word WI appears
+       in any document. */
+    new_idf_vect[docs[i]->entry[j].wi] += docs[i]->entry[j].count;
       } else {
-	bow_error ("Bad TFIDF parameter df_counts.");
+    bow_error ("Bad TFIDF parameter df_counts.");
       }
     }
   }
@@ -815,14 +816,14 @@ static float *tfidf(bow_wv **docs, int ntrain) {
     /* following what Thorsten alledgedly does */
     if (new_idf_vect[i] >= 3.0) {
       if (df_transform == LOG)
-	new_idf_vect[i] = log2f (ntrain / new_idf_vect[i]);
+    new_idf_vect[i] = log2f (ntrain / new_idf_vect[i]);
       else if (df_transform == SQRT)
-	new_idf_vect[i] = sqrtf (ntrain / new_idf_vect[i]);
+    new_idf_vect[i] = sqrtf (ntrain / new_idf_vect[i]);
       else if (df_transform == RAW)
-	new_idf_vect[i] = ntrain / new_idf_vect[i];
+    new_idf_vect[i] = ntrain / new_idf_vect[i];
       else {
-	new_idf_vect[i] = 0;		/* to avoid gcc warning */
-	bow_error ("Bad TFIDF parameter df_transform.");
+    new_idf_vect[i] = 0;        /* to avoid gcc warning */
+    bow_error ("Bad TFIDF parameter df_transform.");
       }
       idf_sum += new_idf_vect[i];
     } else {
@@ -843,7 +844,7 @@ static float *tfidf(bow_wv **docs, int ntrain) {
 /* next 2 fn's stolen from info-gain.c */
 /* Return the entropy given counts for each type of element. */
 static double entropy(float e1, float e2) {
-  double total = 0;		/* How many elements we have in total */
+  double total = 0;        /* How many elements we have in total */
   double entropy = 0.0;
   double fraction;
 
@@ -877,9 +878,9 @@ float *infogain(bow_wv **docs, int *yvect, int ndocs) {
 
   double total_entropy;             /* The entropy of the total collection. */
   double with_word_entropy;         /* The entropy of the set of docs with
-				       the word in question. */
+                       the word in question. */
   double without_word_entropy;      /* The entropy of the set of docs without
-				       the word in question. */
+                       the word in question. */
 
   float grand_total = 0; 
   float with_word_total = 0;
@@ -925,7 +926,7 @@ float *infogain(bow_wv **docs, int *yvect, int ndocs) {
     if (yvect[i]) {
       int y = (yvect[i]+1)/2;
       for (j=0; j<docs[i]->num_entries; j++) {
-	fc[y][docs[i]->entry[j].wi] ++;
+    fc[y][docs[i]->entry[j].wi] ++;
       }
     }
   }
@@ -936,11 +937,11 @@ float *infogain(bow_wv **docs, int *yvect, int ndocs) {
 
     with_word_entropy = entropy((float)fc[0][i],(float)fc[1][i]);
     without_word_entropy = entropy((float)(grand_totals[0] - fc[0][i]),
-				       (float)(grand_totals[1] - fc[1][i]));
+                       (float)(grand_totals[1] - fc[1][i]));
 
     ret[i]=(float) (total_entropy - 
-	    (((double)with_word_total/(double)grand_total)*with_word_entropy) -
-	    (((double)without_word_total/(double)grand_total)*without_word_entropy));
+        (((double)with_word_total/(double)grand_total)*with_word_entropy) -
+        (((double)without_word_total/(double)grand_total)*without_word_entropy));
 
     assert (ret[i] >= -1e-7);
     sum += ret[i];
@@ -971,7 +972,7 @@ static void svm_set_barrel_weights(bow_wv **docs, int *yvect, int ndocs, float *
   } else if (weight_type == RAW) {
     for (i=0; i<ndocs; i++) {
       for (j=0; j<docs[i]->num_entries; j++) {
-	docs[i]->entry[j].weight *= docs[i]->normalizer;
+    docs[i]->entry[j].weight *= docs[i]->normalizer;
       }
     }
     return;
@@ -986,13 +987,13 @@ static void svm_set_barrel_weights(bow_wv **docs, int *yvect, int ndocs, float *
     double sum = 0.0;
     for (j=0; j<docs[i]->num_entries; j++) {
       docs[i]->entry[j].weight *= 
-	docs[i]->normalizer * (*weight_vect)[docs[i]->entry[j].wi];
+    docs[i]->normalizer * (*weight_vect)[docs[i]->entry[j].wi];
       sum += docs[i]->entry[j].weight;
     }
     if (sum >0.0) {
       bow_wv_normalize_weights_by_summing(docs[i]);
       for (j=0; j<docs[i]->num_entries; j++) {
-	docs[i]->entry[j].weight *= docs[i]->normalizer;
+    docs[i]->entry[j].weight *= docs[i]->normalizer;
       }
     }
   }
@@ -1009,17 +1010,17 @@ static void svm_set_wv_weights(bow_wv *qwv, float *oweights, float *weight_vect)
   if (weight_type == TFIDF || weight_type == INFOGAIN) {
     if (tf_transform_type) {
       for (i=0; i<qwv->num_entries; i++) {
-	qwv->entry[i].weight = 
-	  weight_vect[qwv->entry[i].wi] * oweights[i];
-	sum += qwv->entry[i].weight;
+    qwv->entry[i].weight = 
+      weight_vect[qwv->entry[i].wi] * oweights[i];
+    sum += qwv->entry[i].weight;
       }
     } else {
       for (i=0; i<qwv->num_entries; i++) {
-	/* since no transform was used - just use the raw count*/
-	qwv->entry[i].weight = 
-	  weight_vect[qwv->entry[i].wi] * ((float) qwv->entry[i].count);
+    /* since no transform was used - just use the raw count*/
+    qwv->entry[i].weight = 
+      weight_vect[qwv->entry[i].wi] * ((float) qwv->entry[i].count);
 
-	sum += qwv->entry[i].weight;
+    sum += qwv->entry[i].weight;
       }
     }
   } else {
@@ -1051,8 +1052,8 @@ static void svm_set_wv_weights(bow_wv *qwv, float *oweights, float *weight_vect)
 /* tvals is ignored, but the values filled in by the
  * algorithm are not changed. */
 int svm_remove_bound_examples(bow_wv **docs, int *yvect, double *weights,
-			   double *b, double **W, int ndocs, double *tvals,
-			   float *cvect, int *nsv) {
+               double *b, double **W, int ndocs, double *tvals,
+               float *cvect, int *nsv) {
   int      nbound=0;
   int     *tdocs;     /* trans table */
   float   *sub_cvect;
@@ -1069,36 +1070,36 @@ int svm_remove_bound_examples(bow_wv **docs, int *yvect, double *weights,
   if (svm_remove_misclassified==REMOVE_BOUND) {
     for (i=nbound=sub_ndocs=0; i<ndocs; i++) {
       if (weights[i] > cvect[i] - svm_epsilon_a) {
-	nbound ++;
+    nbound ++;
       } else {
-	sub_docs[sub_ndocs] = docs[i];
-	sub_yvect[sub_ndocs] = yvect[i];
-	tdocs[sub_ndocs] = i;
-	sub_ndocs++;
+    sub_docs[sub_ndocs] = docs[i];
+    sub_yvect[sub_ndocs] = yvect[i];
+    tdocs[sub_ndocs] = i;
+    sub_ndocs++;
       }
     }
   } else if (svm_remove_misclassified==REMOVE_WRONG) {
     if (svm_kernel_type == 0) {
       for (i=nbound=sub_ndocs=0; i<ndocs; i++) {
-	if (yvect[i]*evaluate_model_hyperplane(*W, *b, docs[i]) < 0.0) {
-	  nbound ++;
-	} else {
-	  sub_docs[sub_ndocs] = docs[i];
-	  sub_yvect[sub_ndocs] = yvect[i];
-	  tdocs[sub_ndocs] = i;
-	  sub_ndocs++;
-	}
+    if (yvect[i]*evaluate_model_hyperplane(*W, *b, docs[i]) < 0.0) {
+      nbound ++;
+    } else {
+      sub_docs[sub_ndocs] = docs[i];
+      sub_yvect[sub_ndocs] = yvect[i];
+      tdocs[sub_ndocs] = i;
+      sub_ndocs++;
+    }
       }
     } else {
       for (i=nbound=sub_ndocs=0; i<ndocs; i++) {
-	if (yvect[i]*evaluate_model_cache(docs, weights, yvect, *b, docs[i], *nsv) < 0.0) {
-	  nbound ++;
-	} else {
-	  sub_docs[sub_ndocs] = docs[i];
-	  sub_yvect[sub_ndocs] = yvect[i];
-	  tdocs[sub_ndocs] = i;
-	  sub_ndocs++;
-	}
+    if (yvect[i]*evaluate_model_cache(docs, weights, yvect, *b, docs[i], *nsv) < 0.0) {
+      nbound ++;
+    } else {
+      sub_docs[sub_ndocs] = docs[i];
+      sub_yvect[sub_ndocs] = yvect[i];
+      tdocs[sub_ndocs] = i;
+      sub_ndocs++;
+    }
       }
     }
   }
@@ -1125,7 +1126,7 @@ int svm_remove_bound_examples(bow_wv **docs, int *yvect, double *weights,
   } else {
 #ifdef HAVE_LOQO
     x = build_svm_guts(sub_docs, sub_yvect, weights, b, W, sub_ndocs, tvals, 
-		       sub_cvect, nsv);
+               sub_cvect, nsv);
 #else
     bow_error("Must build rainbow with pr_loqo to use this solver!\n");
 #endif
@@ -1148,8 +1149,8 @@ int svm_remove_bound_examples(bow_wv **docs, int *yvect, double *weights,
 
 /* returns whether or not x has changed */
 inline int solve_svm(bow_wv **docs, int *yvect, double *weights, double *ab, 
-		     double **W, int ndocs, double *tvals, float *cvect, 
-		     int *nsv) {
+             double **W, int ndocs, double *tvals, float *cvect, 
+             int *nsv) {
   int x;
 
   if (svm_use_smo) {
@@ -1164,7 +1165,7 @@ inline int solve_svm(bow_wv **docs, int *yvect, double *weights, double *ab,
 
   if (svm_remove_misclassified) {
     x |= svm_remove_bound_examples(docs,yvect,weights,ab,W,ndocs,tvals,
-				  cvect,nsv);
+                  cvect,nsv);
   }
 
   return x;
@@ -1172,11 +1173,11 @@ inline int solve_svm(bow_wv **docs, int *yvect, double *weights, double *ab,
 
 /* returns if the weights have changed */
 int svm_trans_or_chunk(bow_wv **docs, int *yvect, int *trans_yvect, 
-		       double *weights, double *tvals, double *ab, 
-		       double **W, int ntrans, int ndocs, int *nsv) {
+               double *weights, double *tvals, double *ab, 
+               double **W, int ntrans, int ndocs, int *nsv) {
   if (ntrans) {
     return (transduce_svm(docs, yvect, trans_yvect, weights, tvals, ab, 
-			  W, ndocs, ntrans, nsv));
+              W, ndocs, ntrans, nsv));
   } else {
     int i;
     float *cvect = (float *) alloca(sizeof(float)*ndocs);
@@ -1192,7 +1193,7 @@ int svm_trans_or_chunk(bow_wv **docs, int *yvect, int *trans_yvect,
  * algorithm independent stuff (like randomly permuting everything &
  * outputting a hyperplane if possible) */
 int tlf_svm(bow_wv **docs, int *yvect, double *weights, double *ab, 
-	    bow_wv **W_wv, int ntrans, int ndocs) {
+        bow_wv **W_wv, int ntrans, int ndocs) {
   int          nlabeled;
   int          misclass;
   int          nsv;
@@ -1231,8 +1232,8 @@ int tlf_svm(bow_wv **docs, int *yvect, double *weights, double *ab,
   if (do_active_learning) {
     if (test_in_train) {
       nsv = al_svm_test_wrapper(docs, yvect, weights, ab, &W, ntrans, ndocs,
-				(suppress_score_mat ? 0 : 1),
-				al_pick_random, permute_table);
+                (suppress_score_mat ? 0 : 1),
+                al_pick_random, permute_table);
     } else {
       nsv = al_svm(docs, yvect, weights, ab, &W, ntrans, ndocs, al_pick_random);
     }
@@ -1250,9 +1251,9 @@ int tlf_svm(bow_wv **docs, int *yvect, double *weights, double *ab,
 
   times(&t2);
   fprintf(stderr,"user: %d, system:%d, kernel_calls:%d\n", (int)(t2.tms_utime-t1.tms_utime),
-	  (int) (t2.tms_stime - t1.tms_stime), svm_nkc_calls);
+      (int) (t2.tms_stime - t1.tms_stime), svm_nkc_calls);
   printf("user: %d, system:%d, kernel_calls:%d\n", (int)(t2.tms_utime-t1.tms_utime),
-	  (int) (t2.tms_stime - t1.tms_stime), svm_nkc_calls);
+      (int) (t2.tms_stime - t1.tms_stime), svm_nkc_calls);
 
   
   /* unpermute data */
@@ -1277,12 +1278,12 @@ int tlf_svm(bow_wv **docs, int *yvect, double *weights, double *ab,
   if (!svm_remove_misclassified) {
     for (i=misclass=0; i<nlabeled; i++) {
       if (weights[i] > svm_C-svm_epsilon_a) {
-	misclass++;
+    misclass++;
       }
     }
     for (i=0; i<ntrans; i++) {
       if (weights[nlabeled+i] > svm_trans_cstar-svm_epsilon_a) {
-	misclass++;
+    misclass++;
       }
     }
   }
@@ -1386,9 +1387,9 @@ int make_doc_array(bow_barrel *barrel, bow_wv **docs, int *tdocs, int(*dec_fn)(b
 static int silly_currying_global_v1, silly_currying_global_v2;
 int use_train_and_submodel(bow_cdoc *cdoc) {
   return ((cdoc->type == bow_doc_train && 
-	   (silly_currying_global_v1 == cdoc->class ||  
-	    silly_currying_global_v2 == cdoc->class)) ? 
-	  1 : 0);
+       (silly_currying_global_v1 == cdoc->class ||  
+        silly_currying_global_v2 == cdoc->class)) ? 
+      1 : 0);
 }
 
 int use_transduction_docs(bow_cdoc *cdoc) {
@@ -1397,7 +1398,7 @@ int use_transduction_docs(bow_cdoc *cdoc) {
 
 /* helper fn for adding the data for a training example to the barrel */
 int add_sv_barrel(bow_barrel *new_barrel,double *weights, int *yvect, int *tdocs, 
-		  double b, int model_no, int nsv) {
+          double b, int model_no, int nsv) {
   bow_cdoc  cdoc_pos, cdoc_neg;
   bow_wv   *dummy_wv_neg;
   bow_wv   *dummy_wv_pos;
@@ -1442,29 +1443,29 @@ int add_sv_barrel(bow_barrel *new_barrel,double *weights, int *yvect, int *tdocs
   for (i=j=0; j<nsv; i++) {
     if (weights[i] > svm_epsilon_a) {
       if (yvect[i] > 0) {
-	if (pi > num_words) {
-	  dummy_wv_pos->num_entries = pi;
-	  cdoc_pos.word_count = pi;
-	  bow_barrel_add_document(new_barrel, &cdoc_pos, dummy_wv_pos);
-	  pi = 0;
-	  n_meta_docs++;
-	}
-	dummy_wv_pos->entry[pi].weight = (float) weights[i];
-	dummy_wv_pos->entry[pi].count = tdocs[i] + 1;
-	dummy_wv_pos->entry[pi].wi = pi;
-	pi++;
+    if (pi > num_words) {
+      dummy_wv_pos->num_entries = pi;
+      cdoc_pos.word_count = pi;
+      bow_barrel_add_document(new_barrel, &cdoc_pos, dummy_wv_pos);
+      pi = 0;
+      n_meta_docs++;
+    }
+    dummy_wv_pos->entry[pi].weight = (float) weights[i];
+    dummy_wv_pos->entry[pi].count = tdocs[i] + 1;
+    dummy_wv_pos->entry[pi].wi = pi;
+    pi++;
       } else {
-	if (ni > num_words) {
-	  dummy_wv_neg->num_entries = pi;
-	  cdoc_neg.word_count = ni;
-	  bow_barrel_add_document(new_barrel, &cdoc_neg, dummy_wv_pos);
-	  ni = 0;
-	  n_meta_docs++;
-	}
-	dummy_wv_neg->entry[ni].weight = (float) weights[i];
-	dummy_wv_neg->entry[ni].count = tdocs[i] + 1;
-	dummy_wv_neg->entry[ni].wi = ni;
-	ni++;
+    if (ni > num_words) {
+      dummy_wv_neg->num_entries = pi;
+      cdoc_neg.word_count = ni;
+      bow_barrel_add_document(new_barrel, &cdoc_neg, dummy_wv_pos);
+      ni = 0;
+      n_meta_docs++;
+    }
+    dummy_wv_neg->entry[ni].weight = (float) weights[i];
+    dummy_wv_neg->entry[ni].count = tdocs[i] + 1;
+    dummy_wv_neg->entry[ni].wi = ni;
+    ni++;
       }
       j++;
     }
@@ -1492,7 +1493,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
   int           mdocs;       /* the number of docs in the current submodel */
   bow_wv      **model_weights;
   int           n_meta_docs; /* # of documents that will go into the class barrel
-			      * before the weight vectors will */
+                  * before the weight vectors will */
   int           nclasses;
   int           ndocs;        /* total # of documents to be trained & transduced */
   int           ntrain;       /* # of documents to be trained upon */
@@ -1504,10 +1505,10 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
   int           num_words;
   bow_wv      **sub_docs;
   int          *tdocs;       /* trans table of indices in docs to indices 
-			      * in the original barrel */
+                  * in the original barrel */
   int           total_docs;  /* total # of docs (some not for training) */
   int          *utdocs;      /* trans table of the docs in our training set
-			      * to those in the actually used in the models */
+                  * to those in the actually used in the models */
   float        *weight_vect;
   double       *weights;     /* lagrange multipliers */
   bow_wv      **W;           /* hyperplane for lin. folding */
@@ -1518,7 +1519,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
 #ifndef HAVE_LOQO
   if (svm_use_smo != 1) {
     fprintf(stderr,"Can only use SMO, no other solvers were built,\n"
-	    "rebuild libbow with pr_loqo to use another algorithm.\n");
+        "rebuild libbow with pr_loqo to use another algorithm.\n");
   }
 #endif
 
@@ -1567,7 +1568,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
 
     if (ntrain < 2) {
       if (ntrain)
-	bow_wv_free(docs[0]);
+    bow_wv_free(docs[0]);
       fprintf(stderr, "Cannot build svm with less than 2 documents\n");
       fflush(stderr);
       return NULL;
@@ -1575,7 +1576,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
     
     /* append these trans docs to the arrays that were filled in above */
     ntrans = make_doc_array(src_barrel, &(docs[ntrain]), &(tdocs[ntrain]),
-			    use_transduction_docs);
+                use_transduction_docs);
 
     ndocs = ntrain + ntrans;
 
@@ -1596,7 +1597,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
    
     if (ntrain < 2) {
       if (ntrain)
-	bow_wv_free(docs[0]);
+    bow_wv_free(docs[0]);
       fprintf(stderr, "Cannot build svm with less than 2 documents\n");
       fflush(stderr);
       return NULL;
@@ -1604,7 +1605,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
 
     /* figure out the # of ntrans */
     ntrans = make_doc_array(src_barrel, &(docs[ntrain]), &(tdocs[ntrain]),
-			    use_transduction_docs);
+                use_transduction_docs);
     
     ndocs = ntrain + ntrans;
 
@@ -1638,7 +1639,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
 
   /* put together the resultant barrel */
   class_barrel = bow_barrel_new(src_barrel->wi2dvf->size, 2, sizeof(bow_cdoc), 
-				src_barrel->cdocs->free_func);
+                src_barrel->cdocs->free_func);
 
   class_barrel->method = src_barrel->method;
   class_barrel->is_vpc = 1;
@@ -1664,92 +1665,92 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
     /* initialize & pull together the classes for the npass'th model... */
     if (vote_type == PAIRWISE) {
       if (cto == nclasses) {
-	npass ++;
-	if (npass == nclasses-1) {
-	  break;
-	}
-	cto = npass+1;
+    npass ++;
+    if (npass == nclasses-1) {
+      break;
+    }
+    cto = npass+1;
       }
 
       if (svm_weight_style == WEIGHTS_PER_MODEL) {
-	silly_currying_global_v1 = npass;
-	silly_currying_global_v2 = cto;
-	/* this gets called here since the doctype labels are in the barrel */
-	/* utdocs is filled with actual indices, not indices of the train set */
-	mdocs = make_doc_array(src_barrel, sub_docs, utdocs, use_train_and_submodel);
-		
-	/* put the labels in for the labeled docs. */
-	for (i=0; i<mdocs; i++) {
-	  bow_cdoc *cdoc = (GET_CDOC_ARRAY_EL(src_barrel,utdocs[i]));
-	  yvect[i] = map_class_to_y(npass, cdoc->class);
-	}
+    silly_currying_global_v1 = npass;
+    silly_currying_global_v2 = cto;
+    /* this gets called here since the doctype labels are in the barrel */
+    /* utdocs is filled with actual indices, not indices of the train set */
+    mdocs = make_doc_array(src_barrel, sub_docs, utdocs, use_train_and_submodel);
+        
+    /* put the labels in for the labeled docs. */
+    for (i=0; i<mdocs; i++) {
+      bow_cdoc *cdoc = (GET_CDOC_ARRAY_EL(src_barrel,utdocs[i]));
+      yvect[i] = map_class_to_y(npass, cdoc->class);
+    }
 
-	/* even though this set of docs is always the same (since all of the 
-	 * unlabeled data is used for each pairwise document [this is not 
-	 * suggested to with a barrel w/ more than 2 classes] is used) we 
-	 * still grab it, since the starting position for the unlabeled data
-	 * isn't known beforehand (its a slight hack) */
-	ntrans = make_doc_array(src_barrel, &(sub_docs[mdocs]), 
-				&(utdocs[mdocs]), use_transduction_docs);
+    /* even though this set of docs is always the same (since all of the 
+     * unlabeled data is used for each pairwise document [this is not 
+     * suggested to with a barrel w/ more than 2 classes] is used) we 
+     * still grab it, since the starting position for the unlabeled data
+     * isn't known beforehand (its a slight hack) */
+    ntrans = make_doc_array(src_barrel, &(sub_docs[mdocs]), 
+                &(utdocs[mdocs]), use_transduction_docs);
 
-	/* this says that it is unlabelled */
-	for (i=0; i<ntrans; i++) {
-	  yvect[i+mdocs] = 0;
-	}
+    /* this says that it is unlabelled */
+    for (i=0; i<ntrans; i++) {
+      yvect[i+mdocs] = 0;
+    }
 
-	mdocs = mdocs + ntrans;
+    mdocs = mdocs + ntrans;
 
-	/* utdocs holds the barrel indices we're interested in the sub-model
-	 * indices - so we need to remap utdocs */
-	for (i=j=0; j<mdocs; i++) {
-	  if (tdocs[i] < utdocs[j]) {
-	    continue;
-	  } else {
-	    utdocs[j] = i;
-	    j++;
-	  }
-	}
+    /* utdocs holds the barrel indices we're interested in the sub-model
+     * indices - so we need to remap utdocs */
+    for (i=j=0; j<mdocs; i++) {
+      if (tdocs[i] < utdocs[j]) {
+        continue;
+      } else {
+        utdocs[j] = i;
+        j++;
+      }
+    }
 
       } else {
-	for (i=j=0; i<ntrain; i++) {
-	  bow_cdoc *cdoc = (GET_CDOC_ARRAY_EL(src_barrel,tdocs[i]));
-	  if ((cdoc->class == npass) || (cdoc->class == cto)) {
-	    sub_docs[j] = docs[i];
-	    yvect[j] = map_class_to_y(npass, cdoc->class);
-	    utdocs[j] = i;
-	    j++;
-	  }
-	}
-	for (i=0; i<ntrans; j++,i++) {
-	    sub_docs[j] = docs[i+ntrain];
-	    utdocs[j] = i+ntrain;
-	    yvect[j] = 0;
-	}
+    for (i=j=0; i<ntrain; i++) {
+      bow_cdoc *cdoc = (GET_CDOC_ARRAY_EL(src_barrel,tdocs[i]));
+      if ((cdoc->class == npass) || (cdoc->class == cto)) {
+        sub_docs[j] = docs[i];
+        yvect[j] = map_class_to_y(npass, cdoc->class);
+        utdocs[j] = i;
+        j++;
+      }
+    }
+    for (i=0; i<ntrans; j++,i++) {
+        sub_docs[j] = docs[i+ntrain];
+        utdocs[j] = i+ntrain;
+        yvect[j] = 0;
+    }
 
-	mdocs = j;
+    mdocs = j;
       }
 
     } else {
       if (npass == nclasses) {
-	break;
+    break;
       }
       /* all docs should be included - the yvect will do the proper mapping */
       for (i=0; i<ntrain; i++) {
-	bow_cdoc *cdoc = (GET_CDOC_ARRAY_EL(src_barrel,tdocs[i]));
-	/* this map will be extended to make the barrel handle more than 2 classes */
-	yvect[i] = map_class_to_y(npass, cdoc->class);
+    bow_cdoc *cdoc = (GET_CDOC_ARRAY_EL(src_barrel,tdocs[i]));
+    /* this map will be extended to make the barrel handle more than 2 classes */
+    yvect[i] = map_class_to_y(npass, cdoc->class);
       }
 
       for (i=0; i<ntrans; i++) {
-	yvect[i+ntrain] = 0;
+    yvect[i+ntrain] = 0;
       }
       
       if (svm_weight_style == WEIGHTS_PER_MODEL) {
-	for (i=0; i<mdocs; i++) {
-	  /* the weight values are not correct - they include the last values */
-	  /* make_doc_array does this for pairwise voting */
-	  tf_transform(docs[i]);
-	}
+    for (i=0; i<mdocs; i++) {
+      /* the weight values are not correct - they include the last values */
+      /* make_doc_array does this for pairwise voting */
+      tf_transform(docs[i]);
+    }
       }
     }
 
@@ -1757,12 +1758,12 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
       svm_set_barrel_weights(sub_docs, yvect, mdocs, &weight_vect);
       model_weights[nloops] = bow_wv_new(num_words);
       for (i=j=0; i<num_words; i++) {
-	if (weight_vect[i] != 0.0) {
-	  model_weights[nloops]->entry[j].wi = i;
-	  model_weights[nloops]->entry[j].count = 1;
-	  model_weights[nloops]->entry[j].weight = weight_vect[i];
-	  j++;
-	}
+    if (weight_vect[i] != 0.0) {
+      model_weights[nloops]->entry[j].wi = i;
+      model_weights[nloops]->entry[j].count = 1;
+      model_weights[nloops]->entry[j].weight = weight_vect[i];
+      j++;
+    }
       }
       free(weight_vect);
       model_weights[nloops]->num_entries = j;
@@ -1782,11 +1783,11 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
       sprintf(tmp,"train_%d_%s",nloops,svml_basename);
       f = fopen (tmp, "w");
       for (i=0; i<mdocs; i++) {
-	fprintf(f,"%d ", yvect[i]);
-	for (j=0; j<sub_docs[i]->num_entries; j++) {
-	  fprintf (f,"%d:%f ",1+sub_docs[i]->entry[j].wi, sub_docs[i]->entry[j].weight);
-	}
-	fprintf(f,"\n");
+    fprintf(f,"%d ", yvect[i]);
+    for (j=0; j<sub_docs[i]->num_entries; j++) {
+      fprintf (f,"%d:%f ",1+sub_docs[i]->entry[j].wi, sub_docs[i]->entry[j].weight);
+    }
+    fprintf(f,"\n");
       }
       fclose(f);
 
@@ -1802,13 +1803,13 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
       /* only useful with test-in-train - ONLY build models after a certain point
        * (like when the previously acquired data runs out) */
       if ((!test_in_train) || ((test_in_train) && (nloops >= model_starting_no))) {
-	nsv = tlf_svm(sub_docs,yvect,weights,&b,&(W[nloops]),ntrans,mdocs);
+    nsv = tlf_svm(sub_docs,yvect,weights,&b,&(W[nloops]),ntrans,mdocs);
       }
     }
 
     if (vote_type == PAIRWISE && weight_type) {
       for (i=0; i<mdocs; i++) {
-	bow_wv_free(sub_docs[i]);
+    bow_wv_free(sub_docs[i]);
       }
     }
 
@@ -1860,7 +1861,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
     cdoc.class_probs = NULL;
     cdoc.type = bow_doc_ignore;
     cdoc.class = 1;  /* this is fine since all of the docs are class 0 & we
-		      * know how many meta docs there are */
+              * know how many meta docs there are */
     for (i=0; i<nloops; i++) {
       cdoc.word_count = model_weights[i]->num_entries;
       bow_barrel_add_document(class_barrel, &cdoc, model_weights[i]);
@@ -1876,7 +1877,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
 
     /* append these trans docs to the arrays that were filled in above */
     make_doc_array(src_barrel, &(docs[ntrain]), &(tdocs[ntrain]),
-			    use_transduction_docs);
+                use_transduction_docs);
   }
 
   /* now add all of the documents from the doc barrel to the class barrel */
@@ -1898,7 +1899,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
     for (i=0; i<j; i++) {
       dv = bow_wi2dvf_dv (class_barrel->wi2dvf, i);
       if (dv) {
-	dv->idf = weight_vect[i];
+    dv->idf = weight_vect[i];
       }
     }
     free(weight_vect);
@@ -1926,7 +1927,7 @@ bow_barrel *svm_vpc_merge(bow_barrel *src_barrel) {
 }
 
 inline double evaluate_model(bow_wv **docs, double *weights, int *yvect, double b, 
-			     bow_wv *query_wv, int nsv) {
+                 bow_wv *query_wv, int nsv) {
   double sum,tmp;
   int i,j;
   for (i=j=0, sum=0.0; j<nsv; i++) {
@@ -1941,7 +1942,7 @@ inline double evaluate_model(bow_wv **docs, double *weights, int *yvect, double 
 
 /* similar to above, but to only for when the cache should be used */
 inline double evaluate_model_cache(bow_wv **docs, double *weights, int *yvect, double b, 
-			     bow_wv *query_wv, int nsv) {
+                 bow_wv *query_wv, int nsv) {
   double sum,tmp;
   int i,j;
   for (i=j=0, sum=0.0; j<nsv; i++) {
@@ -1971,10 +1972,10 @@ static void clear_model_cache () {
       free(model_cache.weights[i]);
       free(model_cache.yvect[i]);
       if (svm_weight_style == WEIGHTS_PER_MODEL) {
-	free(model_cache.word_weights.sub_model[i]);
+    free(model_cache.word_weights.sub_model[i]);
       }
       if (svm_kernel_type == 0) {
-	free(model_cache.W[i]);
+    free(model_cache.W[i]);
       }
     }
 
@@ -2023,7 +2024,7 @@ void make_sub_model(int m, int weight_style, bow_wv ***sub_docs) {
       int di = indices[i];
       v2 = docs[i]->entry;
       for (j=0; j<n; j++) {
-	v2[j].weight = weights[v2[j].wi] * model_cache.oweights[di][j];
+    v2[j].weight = weights[v2[j].wi] * model_cache.oweights[di][j];
       }
     }
   }
@@ -2060,7 +2061,7 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
       svm_weight_style = WEIGHTS_PER_MODEL;
       model_cache.word_weights.sub_model = (float **) malloc(sizeof(float *)*nmodels);
       if (tf_transform_type) 
-	model_cache.oweights = (float **) malloc(sizeof(float *)*ndocs);
+    model_cache.oweights = (float **) malloc(sizeof(float *)*ndocs);
     } else {
       svm_weight_style = WEIGHTS_PER_BARREL;
       model_cache.word_weights.barrel = (float *) malloc(sizeof(float *)*total_words);
@@ -2092,40 +2093,40 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
 
       /* if this isn't what the last one was,  */
       if ((cdoc->class != classnum) && (c_old != cdoc->class) && (k==1)) {
-	break;
+    break;
       }
 
       bow_heap_next_wv(heap, barrel, &dtmp, bow_cdoc_yes);
       
       if ((cdoc->class != classnum) && (c_old != cdoc->class)) {
-	if (k==-1) {
-	  /* do the stuff that needs done once for each model */
-	  model_cache.bvect[h] = cdoc->normalizer;
-	  nwords = dtmp->num_entries;
-	  model_cache.indices[h] = (int *) malloc(sizeof(int)*nwords);
-	  model_cache.weights[h] = (double *) malloc(sizeof(double)*nwords);
-	  model_cache.yvect[h] = (int *) malloc(sizeof(int)*nwords);
-	} else {  /* in an already initialized model, but we need to grow arrays */
-	  nwords += dtmp->num_entries;
-	  model_cache.indices[h] = (int *) realloc(model_cache.indices[h], sizeof(int)*(nwords));
-	  model_cache.weights[h] = (double *) realloc(model_cache.weights[h], sizeof(double)*nwords);
-	  model_cache.yvect[h] = (int *) realloc(model_cache.yvect[h], sizeof(int)*nwords);
-	}
+    if (k==-1) {
+      /* do the stuff that needs done once for each model */
+      model_cache.bvect[h] = cdoc->normalizer;
+      nwords = dtmp->num_entries;
+      model_cache.indices[h] = (int *) malloc(sizeof(int)*nwords);
+      model_cache.weights[h] = (double *) malloc(sizeof(double)*nwords);
+      model_cache.yvect[h] = (int *) malloc(sizeof(int)*nwords);
+    } else {  /* in an already initialized model, but we need to grow arrays */
+      nwords += dtmp->num_entries;
+      model_cache.indices[h] = (int *) realloc(model_cache.indices[h], sizeof(int)*(nwords));
+      model_cache.weights[h] = (double *) realloc(model_cache.weights[h], sizeof(double)*nwords);
+      model_cache.yvect[h] = (int *) realloc(model_cache.yvect[h], sizeof(int)*nwords);
+    }
 
-	k++;
-	c_old = classnum;
-	classnum = cdoc->class;
+    k++;
+    c_old = classnum;
+    classnum = cdoc->class;
       } else {  /* already seen this class - need to grow some arrays */
-	nwords += dtmp->num_entries;
-	model_cache.indices[h] = (int *) realloc(model_cache.indices[h], sizeof(int)*(nwords));
-	model_cache.weights[h] = (double *) realloc(model_cache.weights[h], sizeof(double)*nwords);
-	model_cache.yvect[h] = (int *) realloc(model_cache.yvect[h], sizeof(int)*nwords);
+    nwords += dtmp->num_entries;
+    model_cache.indices[h] = (int *) realloc(model_cache.indices[h], sizeof(int)*(nwords));
+    model_cache.weights[h] = (double *) realloc(model_cache.weights[h], sizeof(double)*nwords);
+    model_cache.yvect[h] = (int *) realloc(model_cache.yvect[h], sizeof(int)*nwords);
       }
 
       for (i=0; j<nwords; j++,i++) {
-	model_cache.indices[h][j] = dtmp->entry[i].count - 1;
-	model_cache.weights[h][j] = dtmp->entry[i].weight;
-	model_cache.yvect[h][j] = ((k == 0) ? 1.0 : -1.0);
+    model_cache.indices[h][j] = dtmp->entry[i].count - 1;
+    model_cache.weights[h][j] = dtmp->entry[i].weight;
+    model_cache.yvect[h][j] = ((k == 0) ? 1.0 : -1.0);
       }
 
     }
@@ -2138,15 +2139,15 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
       bow_heap_next_wv(heap, barrel, &dtmp, bow_cdoc_yes);
       model_cache.W[i] = (double *) malloc(total_words*sizeof(double));
       for (h=j=0; j<dtmp->num_entries; h++) {
-	if (h == dtmp->entry[j].wi) {
-	  model_cache.W[i][h] = dtmp->entry[j].weight;
-	  j++;
-	} else {
-	  model_cache.W[i][h] = 0.0;
-	}
+    if (h == dtmp->entry[j].wi) {
+      model_cache.W[i][h] = dtmp->entry[j].weight;
+      j++;
+    } else {
+      model_cache.W[i][h] = 0.0;
+    }
       }
       for (; h<total_words; h++) {
-	model_cache.W[i][h] = 0.0;
+    model_cache.W[i][h] = 0.0;
       }
     }
 
@@ -2167,12 +2168,12 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
       bow_heap_next_wv(heap, barrel, &dtmp, bow_cdoc_yes);
       model_cache.word_weights.sub_model[h] = (float *) malloc(sizeof(float)*total_words);
       for (i=j=0; i<total_words; i++) {
-	if ((j < dtmp->num_entries) && (dtmp->entry[j].wi == i)) {
-	  model_cache.word_weights.sub_model[h][i] = dtmp->entry[j].weight;
-	  j++;
-	} else {
-	  model_cache.word_weights.sub_model[h][i] = 0.0;
-	}
+    if ((j < dtmp->num_entries) && (dtmp->entry[j].wi == i)) {
+      model_cache.word_weights.sub_model[h][i] = dtmp->entry[j].weight;
+      j++;
+    } else {
+      model_cache.word_weights.sub_model[h][i] = 0.0;
+    }
       }
     }
   } else if (svm_weight_style == WEIGHTS_PER_BARREL) {
@@ -2181,9 +2182,9 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
     for (h=0; h<total_words; h++) {
       dv = bow_wi2dvf_dv (barrel->wi2dvf, h);
       if (dv) {
-	model_cache.word_weights.barrel[h] = dv->idf;
+    model_cache.word_weights.barrel[h] = dv->idf;
       } else {
-	model_cache.word_weights.barrel[h] = 0.0;
+    model_cache.word_weights.barrel[h] = 0.0;
       }
     }
   }
@@ -2201,7 +2202,7 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
     /*
     if (svm_kernel_type == FISHER) {
       for (j=0; j<model_cache.docs[h]->num_entries; j++) {
-	model_cache.docs[h]->entry[j].weight = (float) model_cache.docs[h]->entry[j].count;
+    model_cache.docs[h]->entry[j].weight = (float) model_cache.docs[h]->entry[j].count;
       }
       model_cache.docs[h]->normalizer = 1.0;
       continue;
@@ -2213,24 +2214,24 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
     if (svm_weight_style == WEIGHTS_PER_MODEL && tf_transform_type) {
       model_cache.oweights[h] = (float *) malloc(sizeof(float)*dtmp->num_entries);
       for (j=0; j<model_cache.docs[h]->num_entries; j++) {
-	model_cache.oweights[h][j] = model_cache.docs[h]->entry[j].weight;
+    model_cache.oweights[h][j] = model_cache.docs[h]->entry[j].weight;
       }
     } else {
       /* otherwise, the weights should be set now... */
       if (svm_weight_style == NO_WEIGHTS) {
-	bow_wv_normalize_weights_by_summing(model_cache.docs[h]);
-	for (j=0; j<model_cache.docs[h]->num_entries; j++) {
-	  model_cache.docs[h]->entry[j].weight *= model_cache.docs[h]->normalizer;
-	}
+    bow_wv_normalize_weights_by_summing(model_cache.docs[h]);
+    for (j=0; j<model_cache.docs[h]->num_entries; j++) {
+      model_cache.docs[h]->entry[j].weight *= model_cache.docs[h]->normalizer;
+    }
       } else {
-	for (j=0; j<model_cache.docs[h]->num_entries; j++) {
-	  model_cache.docs[h]->entry[j].weight *= 
-	    model_cache.word_weights.barrel[model_cache.docs[h]->entry[j].wi];
-	}
-	bow_wv_normalize_weights_by_summing(model_cache.docs[h]);
-	for (j=0; j<model_cache.docs[h]->num_entries; j++) {
-	  model_cache.docs[h]->entry[j].weight *= model_cache.docs[h]->normalizer;
-	}
+    for (j=0; j<model_cache.docs[h]->num_entries; j++) {
+      model_cache.docs[h]->entry[j].weight *= 
+        model_cache.word_weights.barrel[model_cache.docs[h]->entry[j].wi];
+    }
+    bow_wv_normalize_weights_by_summing(model_cache.docs[h]);
+    for (j=0; j<model_cache.docs[h]->num_entries; j++) {
+      model_cache.docs[h]->entry[j].weight *= model_cache.docs[h]->normalizer;
+    }
       }
     }
     /* the oweights (original weights) in the svm_wv now has the proper,
@@ -2243,7 +2244,7 @@ static void setup_docs(bow_barrel *barrel, int nclasses, int nmodels) {
 }
 
 int svm_score(bow_barrel *barrel, bow_wv *query_wv, bow_score *bscores, 
-	      int bscores_len, int loo_class) {
+          int bscores_len, int loo_class) {
   int          ci;
   int          max_nsv;
   double      *model_vals;
@@ -2311,41 +2312,41 @@ int svm_score(bow_barrel *barrel, bow_wv *query_wv, bow_score *bscores,
   if (svm_kernel_type == 0) {
     for (i=0; i<nmodels; i++) {
       if (set_weights) {
-	if (tf_transform_type) {
-	  svm_set_wv_weights(query_wv, base_qwv_weights, model_cache.word_weights.sub_model[i]);
-	} else {
-	  svm_set_wv_weights(query_wv, NULL, model_cache.word_weights.sub_model[i]);
-	}
+    if (tf_transform_type) {
+      svm_set_wv_weights(query_wv, base_qwv_weights, model_cache.word_weights.sub_model[i]);
+    } else {
+      svm_set_wv_weights(query_wv, NULL, model_cache.word_weights.sub_model[i]);
+    }
       }
       
       if (svml_test_file) {
-	for (j=0; j<query_wv->num_entries; j++) {
-	  fprintf (svml_test_file,"%d:%f ",1+query_wv->entry[j].wi, query_wv->entry[j].weight);
-	}
-	fprintf(svml_test_file,"\n");
-	model_vals[i] = 1;
+    for (j=0; j<query_wv->num_entries; j++) {
+      fprintf (svml_test_file,"%d:%f ",1+query_wv->entry[j].wi, query_wv->entry[j].weight);
+    }
+    fprintf(svml_test_file,"\n");
+    model_vals[i] = 1;
       } else {
-	model_vals[i] = 
-	  evaluate_model_hyperplane(model_cache.W[i], model_cache.bvect[i], query_wv);
+    model_vals[i] = 
+      evaluate_model_hyperplane(model_cache.W[i], model_cache.bvect[i], query_wv);
       }
     }
   } else {
     for (i=0; i<nmodels; i++) {
       make_sub_model(i, set_weights, &sub_docs);
       if (svm_weight_style == WEIGHTS_PER_MODEL) {
-	svm_set_wv_weights(query_wv, base_qwv_weights, model_cache.word_weights.sub_model[i]);
+    svm_set_wv_weights(query_wv, base_qwv_weights, model_cache.word_weights.sub_model[i]);
       }
 
       if (svml_test_file) {
-	for (j=0; j<query_wv->num_entries; j++) {
-	  fprintf (svml_test_file,"%d:%f ",1+query_wv->entry[j].wi, query_wv->entry[j].weight);
-	}
-	fprintf(svml_test_file,"\n");
-	model_vals[i] = 1;
+    for (j=0; j<query_wv->num_entries; j++) {
+      fprintf (svml_test_file,"%d:%f ",1+query_wv->entry[j].wi, query_wv->entry[j].weight);
+    }
+    fprintf(svml_test_file,"\n");
+    model_vals[i] = 1;
       } else {
-	model_vals[i] = 
-	  evaluate_model(sub_docs, model_cache.weights[i], model_cache.yvect[i], 
-			 model_cache.bvect[i], query_wv, model_cache.sizes[i]);
+    model_vals[i] = 
+      evaluate_model(sub_docs, model_cache.weights[i], model_cache.yvect[i], 
+             model_cache.bvect[i], query_wv, model_cache.sizes[i]);
       }
     }
   }
@@ -2371,11 +2372,11 @@ int svm_score(bow_barrel *barrel, bow_wv *query_wv, bow_score *bscores,
 
     for (i=ii=0; i<nclasses-1; i++, ii+=j) {
       for (j=0; j<nclasses-i-1; j++) {
-	if (model_vals[j+ii] > 0) {
-	  myscores[i].weight += 1.0;
-	} else {
-	  myscores[j+i+1].weight += 1.0;
-	}
+    if (model_vals[j+ii] > 0) {
+      myscores[i].weight += 1.0;
+    } else {
+      myscores[j+i+1].weight += 1.0;
+    }
       }
     }
 
@@ -2384,9 +2385,9 @@ int svm_score(bow_barrel *barrel, bow_wv *query_wv, bow_score *bscores,
 
     for (ntied=i=1; i<nclasses; i++) {
       if (myscores[i].weight == myscores[0].weight) {
-	ntied++;
+    ntied++;
       } else {
-	break;
+    break;
       }
     }
 
@@ -2396,52 +2397,52 @@ int svm_score(bow_barrel *barrel, bow_wv *query_wv, bow_score *bscores,
       div = (struct di*) alloca(sizeof(struct di)*ntied);
 
       for (i=0; i<ntied; i++) {
-	div[i].d = 0.0;
-	div[i].i = myscores[i].di;
+    div[i].d = 0.0;
+    div[i].i = myscores[i].di;
       }
 
       fprintf(stderr,"Warning, %d way tie.\n",ntied);
       fflush(stdout);
       for (i=ii=k=0; k<ntied-1; i++, ii+=(nclasses-i)) {
-	if (i == myscores[k].di) {
-	  k++;
-	  for (j=k; j<ntied; j++) {
-	    if (model_vals[ii+myscores[j].di-i-1] > 0) {
-	      myscores[k-1].weight += 0.2;
-	      div[k-1].d += model_vals[ii+myscores[j].di-i-1];
-	    } else {
-	      myscores[j].weight += 0.2;
-	      div[j].d += -model_vals[ii+myscores[j].di-i-1];
-	    }
-	  }
-	}
+    if (i == myscores[k].di) {
+      k++;
+      for (j=k; j<ntied; j++) {
+        if (model_vals[ii+myscores[j].di-i-1] > 0) {
+          myscores[k-1].weight += 0.2;
+          div[k-1].d += model_vals[ii+myscores[j].di-i-1];
+        } else {
+          myscores[j].weight += 0.2;
+          div[j].d += -model_vals[ii+myscores[j].di-i-1];
+        }
+      }
+    }
       }
 
       qsort(myscores, ntied, sizeof(bow_score), s_cmp);
 
       k = ntied;
       for (ntied=i=1; i<k; i++) {
-	if (myscores[i].weight == myscores[0].weight) {
-	  ntied++;
-	} else {
-	  break;
-	}
+    if (myscores[i].weight == myscores[0].weight) {
+      ntied++;
+    } else {
+      break;
+    }
       }
 
       if (ntied > 1) {
-	fprintf(stderr,"Warning, taking largest pairwise value to break %d-way tie\n", ntied);
-	fflush(stdout);
+    fprintf(stderr,"Warning, taking largest pairwise value to break %d-way tie\n", ntied);
+    fflush(stdout);
 
-	for (i=0; i<ntied; i++) {
-	  for (j=0; 1; j++) {
-	    if (myscores[i].di == div[j].i) {
-	      myscores[i].weight += div[j].d/1000;
-	      break;
-	    }
-	  }
-	}
+    for (i=0; i<ntied; i++) {
+      for (j=0; 1; j++) {
+        if (myscores[i].di == div[j].i) {
+          myscores[i].weight += div[j].d/1000;
+          break;
+        }
+      }
+    }
 
-	qsort(myscores, ntied, sizeof(bow_score), s_cmp);
+    qsort(myscores, ntied, sizeof(bow_score), s_cmp);
       }
     }
 
@@ -2456,23 +2457,23 @@ int svm_score(bow_barrel *barrel, bow_wv *query_wv, bow_score *bscores,
     /* Each round, find the best remainaing score and put it into bscores */
     for (num_scores=ci=0; ci < nclasses; ci++) {
       if (num_scores < bscores_len
-	  || bscores[num_scores-1].weight < model_vals[ci]) {
-	int dsi;
-	/* We are going to put this score and class index into SCORES
-	 * because either 1) there is an empty space in SCORES, or 2)
-	 * SCORES[CI] is larger than the smallest score currently there */
-	if (num_scores < bscores_len)
-	  num_scores++;
-	dsi = num_scores - 1;
-	/* Shift down all the entries that are smaller than SCORES[CI] */
-	for (; dsi > 0 && bscores[dsi-1].weight < model_vals[ci]; dsi--) {
-	  bscores[dsi].weight = bscores[dsi-1].weight;
-	  bscores[dsi].name = bscores[dsi-1].name;
-	  bscores[dsi].di = bscores[dsi-1].di;
-	}
-	bscores[dsi].weight = model_vals[ci];
-	bscores[dsi].di = ci;
-	bscores[dsi].name = "default";
+      || bscores[num_scores-1].weight < model_vals[ci]) {
+    int dsi;
+    /* We are going to put this score and class index into SCORES
+     * because either 1) there is an empty space in SCORES, or 2)
+     * SCORES[CI] is larger than the smallest score currently there */
+    if (num_scores < bscores_len)
+      num_scores++;
+    dsi = num_scores - 1;
+    /* Shift down all the entries that are smaller than SCORES[CI] */
+    for (; dsi > 0 && bscores[dsi-1].weight < model_vals[ci]; dsi--) {
+      bscores[dsi].weight = bscores[dsi-1].weight;
+      bscores[dsi].name = bscores[dsi-1].name;
+      bscores[dsi].di = bscores[dsi-1].di;
+    }
+    bscores[dsi].weight = model_vals[ci];
+    bscores[dsi].di = ci;
+    bscores[dsi].name = "default";
       }
     }
 
@@ -2494,7 +2495,7 @@ rainbow_method rainbow_method_svm = {
   NULL,
   NULL,
   svm_vpc_merge,               /* note: this is written esp. for svms, hence
-				* the reason the first 3 fns are undefined */
+                * the reason the first 3 fns are undefined */
   NULL,
   svm_score,
   bow_wv_set_weights_to_count, /* any similarity metric will work... */
@@ -2508,6 +2509,6 @@ void _register_method_svm () __attribute__ ((constructor));
 
 void _register_method_svm () {
   bow_method_register_with_name ((bow_method*)&rainbow_method_svm, "svm", 
-				 sizeof(rainbow_method), &svm_argp_child);
+                 sizeof(rainbow_method), &svm_argp_child);
   bow_argp_add_child (&svm_argp_child);
 }
