@@ -1047,9 +1047,7 @@ multiclass_train ()
     }
 }
 
-void
-bow_sort_scores (bow_score *scores, int count)
-{
+
   static int score_compare (const void *x, const void *y)
     {
       if (((bow_score *)x)->weight > ((bow_score *)y)->weight)
@@ -1059,6 +1057,10 @@ bow_sort_scores (bow_score *scores, int count)
       else
 	return 1;
     }
+
+void
+bow_sort_scores (bow_score *scores, int count)
+{
   qsort (scores, count, sizeof (bow_score), score_compare);
 }
 
@@ -1256,6 +1258,7 @@ multiclass_cis_scores_index (int *cis, int cis_size,
 	}
       return si;
     next_si:
+        break;
     }
   return -1;
 }
@@ -1340,6 +1343,7 @@ multiclass_explore_cis_greedy0 (crossbow_doc *doc,
 	  max_ci = ci;
 	}
     next_class1:
+        break;
     }
 
   if (local_exclude_cis_size + 1 < exclude_cis_capacity/2
@@ -1421,8 +1425,10 @@ multiclass_explore_cis_greedy0 (crossbow_doc *doc,
 	      max_ci2 = ci2;
 	    }
 	next_class22:
+        break;
 	}
     next_class2:
+        break;
     }
   assert (max_si >= 0);
 
