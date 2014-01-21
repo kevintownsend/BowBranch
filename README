@@ -1,10 +1,7 @@
-Bag Of Words Library README
-***************************
+BowBranch README
 
-`libbow', version 1.0.
-
-   Documentation and updates for `libbow' are available at
-http://www.cs.cmu.edu/~mccallum/bow
+This package is a fork of the original Bag Of Words Library (libbow). The
+original package can be found at http://www.cs.cmu.edu/~mccallum/bow.
 
    Rainbow is a C program that performs document classification using
 one of several different methods, including naive Bayes, TFIDF/Rocchio,
