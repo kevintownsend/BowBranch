@@ -139,3 +139,29 @@ AltaVista-type queries, using +, -, "", etc.  The commands in the
 "arrow" examples above also work for archer.  See "archer -help" for
 more information.
 
+Source code revision control
+============================
+
+   In order to compile libbow, you'll have to
+   create `./configure' from `./configure.in' by typing (in the bow
+   directory)
+
+      autoconf
+      (cd argp ; autoconf)
+
+   You must have the autoconf program installed on your system.  It is
+   available from ftp://ftp.gnu.org/pub/gnu or its mirrors.
+
+
+Coding standards
+================
+
+    BOW coding follows the GNU coding standards.  The standards are
+    described in a text file at 
+    ftp://ftp.gnu.org/pub/gnu/GNUinfo/standards/standards.text
+    http://www.gnu.org/prep/standards/standards.html if this does not specify
+    a style than use
+    http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml or your
+    own common sense.
+
+    Please follow these standards in your code additions to BOW.

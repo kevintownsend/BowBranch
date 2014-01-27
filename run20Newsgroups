@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ ! -e 20Newsgroups ]
+then
+    mkdir -f 20Newsgroups
+fi
+cd 20Newsgroups
+if [ ! -e 20news-bydate.tar.gz ]
+then
+    wget http://qwone.com/~jason/20Newsgroups/20news-bydate.tar.gz
+fi

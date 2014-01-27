@@ -8,9 +8,10 @@ To compile and install `libbow':
           ./configure --prefix=/usr/local
 
      Where `/usr/local' can be replaced with any pre-existing directory
-     in which you want to install the package.  Executables will go in
-     `prefix'/bin.  The library, `libbow' will go in `prefix'/lib.  The
-     include files will go in `prefix'/include/bow.
+     in which you want to install the package (for example `$HOME'.
+     Executables will go in `prefix'/bin.  The library, `libbow' will 
+     go in `prefix'/lib.  The include files will go in 
+     `prefix'/include/bow.
 
      If you want to turn off all debugging assertions, you can do this
      by setting CPPFLAGS in the configuration line.
