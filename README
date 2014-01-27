@@ -1,6 +1,9 @@
 BowBranch README
 
-This package is a fork of the original Bag Of Words Library (libbow). The
+This package is a fork of the original Bag Of Words Library (libbow).
+Kevin
+Townsend is currently maintaining this current branch. This branch
+currently compiles under the 32 and 64 bit versions of linux and cygwin. The
 original package can be found at http://www.cs.cmu.edu/~mccallum/bow.
 
    Rainbow is a C program that performs document classification using
@@ -47,7 +50,7 @@ Bayes classifier from 10,000 articles, and classifying the other 10,000
 takes about 1 minute.
 
    The code conforms to the GNU coding standards.  It is released under
-the Library GNU Public License (LGPL).
+the Lesser GNU Public License (LGPL v2.1).
 
 The library does not:
         Have parsing facilities.
