@@ -1,10 +1,18 @@
 #!/bin/bash
 if [ ! -e 20Newsgroups ]
 then
-    mkdir -f 20Newsgroups
+    mkdir 20Newsgroups
 fi
 cd 20Newsgroups
 if [ ! -e 20news-bydate.tar.gz ]
 then
     wget http://qwone.com/~jason/20Newsgroups/20news-bydate.tar.gz
 fi
+if [ ! -e 20news-bydate-train -o ! -e 20news-bydate-test ]
+then
+    tar -xzf 20news-bydate.tar.gz
+fi
+rm -rf model
+rainbow -d ./model --index 20news-bydate-train/* 20news-bydate-test/*
+ls 20news-bydate-test/*/* > filelist1
+rainbow -d ./model --test-set=filelist1 --test=1 > results
