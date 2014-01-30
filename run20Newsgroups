@@ -15,4 +15,7 @@ fi
 rm -rf model
 rainbow -d ./model --index 20news-bydate-train/* 20news-bydate-test/*
 ls 20news-bydate-test/*/* > filelist1
-rainbow -d ./model --test-set=filelist1 --test=1 > results
+rainbow -d ./model --test-set=filelist1 --test=1 > 20NewsResults
+rainbow-stats < 20NewsResults
+#Uncomment the following line to print the 
+#rainbow -d ./model --print-matrix > bowMatrix
