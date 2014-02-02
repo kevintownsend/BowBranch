@@ -1,9 +1,0 @@
-Keep this TODO file short. Submit requests to:
-https://github.com/testsubject42/BowBranch/issues.
-1. Create a style guide. Port style to follow:
-http://www.gnu.org/prep/standards/standards.html if this does not specify
-a style than use
-http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml or your
-own common sense.
-2. Following from above, fix the mixing of space and tab indents and use 2
-space indents (Sorry, it's a pet peeve of mine).
