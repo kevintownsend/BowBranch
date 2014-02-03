@@ -13,9 +13,13 @@ then
     tar -xzf 20news-bydate.tar.gz
 fi
 rm -rf model
-rainbow -d ./model --index 20news-bydate-train/* 20news-bydate-test/*
+if [ "$1" = "small" ]
+then
+    rainbow -d ./model --index 20news-bydate-train/alt.atheism/ 20news-bydate-train/comp.graphics/ 20news-bydate-test/alt.atheism/ 20news-bydate-test/comp.graphics/
+else
+    rainbow -d ./model --index 20news-bydate-train/* 20news-bydate-test/*
+fi
 ls 20news-bydate-test/*/* > filelist1
 rainbow -d ./model --test-set=filelist1 --test=1 > 20NewsResults
 rainbow-stats < 20NewsResults
-#Uncomment the following line to print the 
-#rainbow -d ./model --print-matrix > bowMatrix
+rainbow -d ./model --print-matrix > bowMatrix
