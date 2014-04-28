@@ -30,6 +30,7 @@ various tf weight options - particularly 'l' and 'a' apply only to
 words that occur in the document in question - which avoids any taking
 the log of 0. 
 
+TODO: These links are dead and difficult to understand
 If you want to check this, look at the table at
 http://pi0959.kub.nl:2080/Paai/Onderw/Smart/examp_10.html 
 (Linked to by the Advanced actions part of the SMART tutorial at
